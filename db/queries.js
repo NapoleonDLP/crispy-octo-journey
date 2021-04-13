@@ -25,6 +25,16 @@ const getUserById = (req, res) => {
   });
 };
 
+const createUser = (req, res) => {
+  const { name, email } = req.body;
+
+  pool.query('INSERT INTO users (name, email) VALUES ($1, $2)', [name, email], (error, results) => {
+    if (error) throw error;
+
+    res.status(201).send(`User added with ID: ${id}`);
+  });
+};
+
 const updateUser = (req, res) => {
   const id = parseInt(req.params.id);
   const { name, email } = req.body;
@@ -48,4 +58,12 @@ const deleteUser = (req, res) => {
 
     res.status(200).send(`User deleted with ID: ${id}`);
   });
+};
+
+module.exports = {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser
 };
