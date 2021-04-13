@@ -1,11 +1,18 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
+const db = require('./db/queries');
 const port = 3000;
 
-app.get('/', (req, res) => {
-  res.send('Hello world');
-});
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+app.get('/', (request, response) => {
+  response.json({
+    info: 'Node.js, Express, and Postgres API'
+  });
 });
