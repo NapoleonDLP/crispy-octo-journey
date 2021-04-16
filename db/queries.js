@@ -26,13 +26,17 @@ const getUserById = (request, response) => {
 };
 
 const createUser = (request, response) => {
-  const { name, email } = request.body;
+  const { first_name, last_name, email, slug } = request.body;
+  const to_timestamp = new Date;
 
-  pool.query('INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id', [name, email], (error, results) => {
-    if (error) throw error;
+  pool.query('INSERT INTO users (first_name, last_name, email, slug, created, last_updated) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+              [first_name, last_name, email, slug, to_timestamp, to_timestamp],
+              (error, results) => {
+                if (error) throw error;
 
-    response.status(201).send(`User added with ID: ${results.rows[0].id}`);
-  });
+                response.status(201).send(`User added with ID: ${results.rows[0].id}`);
+              }
+  );
 };
 
 const updateUser = (request, response) => {
