@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const Pool = require('pg').Pool
 const pool = new Pool({
   user: 'me',
@@ -25,12 +27,14 @@ const getUserById = (request, response) => {
   });
 };
 
-const createUser = (request, response) => {
-  const { first_name, last_name, email, slug } = request.body;
+const createUser = async (request, response) => {
+  const { first_name, last_name, email, password, slug } = request.body;
   const to_timestamp = new Date;
+  const salt = await bcrypt.genSalt(10);
+  const password_hash = await bcrypt.hash(password, salt);
 
-  pool.query('INSERT INTO users (first_name, last_name, email, slug, created, last_updated) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
-              [first_name, last_name, email, slug, to_timestamp, to_timestamp],
+  pool.query('INSERT INTO users (first_name, last_name, email, password, slug, created, last_updated) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id',
+              [first_name, last_name, email, password_hash, slug, to_timestamp, to_timestamp],
               (error, results) => {
                 if (error) throw error;
 
