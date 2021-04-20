@@ -43,11 +43,15 @@ const createUser = async (request, response) => {
   );
 };
 
+// TODO: Currently updates all columns with null if nothing or an empty string is entered.
 const updateUser = (request, response) => {
   const id = parseInt(request.params.id);
-  const { name, email } = request.body;
+  const { first_name, last_name, email, password, slug } = request.body;
+  const to_timestamp = new Date;
 
-  pool.query('UPDATE users SET name = $1, email = $2 WHERE id = $3', [name, email, id], (error, results) => {
+  console.log("BODY COMING FROM REQ: ", request.body);
+
+  pool.query('UPDATE users SET first_name = $1, last_name = $2, email = $3, password = $4, slug = $5, last_updated = $6 WHERE id = $7', [first_name, last_name, email, password, slug, to_timestamp, id], (error, results) => {
       if (error) throw error;
 
       response.status(200).send(`User modified with ID: ${id}`);
