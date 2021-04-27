@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "create-db":"psql -U postgres < schema.sql",
-    "seed":"npm run create-db && Node db/seeds.js",
+    "create-db": "psql -U postgres < schema.sql",
+    "seed": "npm run create-db && Node db/seeds.js",
     "start": "nodemon app.js -watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,6 +26,7 @@
     "pg-promise": "^10.10.1"
   },
   "devDependencies": {
+    "faker": "^5.5.3",
     "nodemon": "^2.0.7"
   }
 }
