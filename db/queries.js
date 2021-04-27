@@ -1,12 +1,11 @@
 const bcrypt = require('bcrypt');
-// const crypto = require('crypto');//not sure it is what i want to use
 const { updateUserQuery } = require('../helpers/updateUser.js');
 
 const Pool = require('pg').Pool
 const pool = new Pool({
-  user: 'me',
+  user: 'naps',
   host: 'localhost',
-  database: 'api',
+  database: 'charles_hustle',
   password: 'password',
   port: 5432
 });
@@ -29,7 +28,6 @@ const getUserById = (request, response) => {
   });
 };
 
-//TODO: Add constraints for all columns. When creating new user, there are required fields. not null: first_name, last_name, email, password
 const createUser = async (request, response) => {
   const { first_name, last_name, email, password, slug } = request.body;
   const to_timestamp = new Date;
@@ -37,8 +35,8 @@ const createUser = async (request, response) => {
   const password_hash = await bcrypt.hash(password, salt);
 
   pool.query(
-    'INSERT INTO users (first_name, last_name, email, password, slug, created, last_updated) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id',
-    [first_name, last_name, email, crypto(password, gen_salt('bf')), slug, to_timestamp, to_timestamp],
+    'INSERT INTO users (first_name, last_name, email, pass_hash, slug, created, last_updated) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id',
+    [first_name, last_name, email, password_hash, slug, to_timestamp, to_timestamp],
     (error, results) => {
       if (error) throw error;
 
@@ -78,20 +76,20 @@ const updateUserPassword = async (request, response) => {
   const salt = await bcrypt.genSalt(10);
   const new_password_hash = await bcrypt.hash(new_password, salt);
 
-  pool.query('SELECT password FROM users WHERE id = $1', [id], (error, results) => {
+  pool.query('SELECT pass_hash FROM users WHERE id = $1', [id], (error, results) => {
     if (error) throw error;
 
-    bcrypt.compare(old_password, results.rows[0].password, (error, result) => {
+    bcrypt.compare(old_password, results.rows[0].pass_hash, (error, result) => {
       if (error) throw error;
 
       if (result) {
-        pool.query('UPDATE users SET password = $1, last_updated = $2 WHERE id = $3', [new_password_hash, to_timestamp, id], (error, result) => {
+        pool.query('UPDATE users SET pass_hash = $1, last_updated = $2 WHERE id = $3', [new_password_hash, to_timestamp, id], (error, result) => {
           if (error) throw error;
 
-          response.status(201).json(`Updated ${id}'s password`);
+          response.status(201).json(`User password modified with ID: ${id}`);
         });
       } else {
-        response.status(501).json('Passwords did not match');
+        response.status(403).json('Passwords did not match');
       };
     });
   });
