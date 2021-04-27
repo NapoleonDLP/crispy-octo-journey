@@ -17,11 +17,13 @@ app.get('/', (request, response) => {
   });
 });
 
+//User endpoints
 app.get('/users', db.getUsers);
 app.get('/users/:id', db.getUserById);
 app.post('/users', db.createUser);
 app.put('/users/:id', db.updateUser);
 app.delete('/users/:id', db.deleteUser);
+app.put('/settings/password/:id', db.updateUserPassword);
 
 app.listen(3000, function () {
   console.log("Express server listening on port 3000");

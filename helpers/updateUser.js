@@ -28,4 +28,4 @@ const updateUserQuery = function(body, id) {
 
 module.exports = {
   updateUserQuery
-}
+};
