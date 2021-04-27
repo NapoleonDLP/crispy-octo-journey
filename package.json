@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "create-db":"psql -U postgres < schema.sql",
+    "seed":"npm run create-db && Node db/seeds.js",
     "start": "nodemon app.js -watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
