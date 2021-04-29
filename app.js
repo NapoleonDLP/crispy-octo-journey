@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const db = require('./db/queries');
-const port = 3000;
+const port = 3001;
 
 app.use(bodyParser.json());
 app.use(
@@ -25,6 +25,6 @@ app.put('/users/:id', db.updateUser);
 app.delete('/users/:id', db.deleteUser);
 app.put('/settings/password/:id', db.updateUserPassword);
 
-app.listen(3000, function () {
+app.listen(port, function () {
   console.log("Express server listening on port 3000");
 });
