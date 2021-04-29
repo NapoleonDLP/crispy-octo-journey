@@ -22,6 +22,7 @@
   "homepage": "https://github.com/NapoleonDLP/crispy-octo-journey#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "pg": "^8.5.1",
     "pg-promise": "^10.10.1"
