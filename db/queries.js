@@ -29,10 +29,14 @@ const getUserById = (request, response) => {
 };
 
 const createUser = async (request, response) => {
-  const { first_name, last_name, email, password, slug } = request.body;
+  let { first_name, last_name, email, password, slug } = request.body;
   const to_timestamp = new Date;
   const salt = await bcrypt.genSalt(10);
   const password_hash = await bcrypt.hash(password, salt);
+
+  (first_name && last_name && email && password) ? null : response.status(400).send('Invalid entry');
+
+  slug ? slug = slug : slug = null;
 
   pool.query(
     'INSERT INTO users (first_name, last_name, email, pass_hash, slug, created, last_updated) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id',
