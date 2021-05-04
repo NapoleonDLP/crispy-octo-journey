@@ -112,7 +112,6 @@ const authentication = async (request, response) => {
 
         const user = result.rows[0];
 
-
         if (results) {
           response.status(201).json({
             id: user.id,
