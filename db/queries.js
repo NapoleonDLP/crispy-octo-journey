@@ -99,11 +99,42 @@ const updateUserPassword = async (request, response) => {
   });
 };
 
+const authentication = async (request, response) => {
+  const password = request.body.password;
+  const email = request.body.email;
+
+  if (email && password) {
+    pool.query('SELECT * FROM users WHERE email= $1', [email], (error, result) => {
+      if (error) throw error;
+
+      bcrypt.compare(password, result.rows[0].pass_hash, (error, results) => {
+        if (error) throw error;
+
+        const user = result.rows[0];
+
+
+        if (results) {
+          response.status(201).json({
+            id: user.id,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            slug: user.slug
+          })
+        } else {
+          response.status(404).json('Records did not match');
+        }
+      })
+    })
+  }
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
   updateUser,
   deleteUser,
-  updateUserPassword
-};
+  updateUserPassword,
+  authentication
+}

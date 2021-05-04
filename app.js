@@ -27,6 +27,7 @@ app.post('/users', db.createUser);
 app.put('/users/:id', db.updateUser);
 app.delete('/users/:id', db.deleteUser);
 app.put('/settings/password/:id', db.updateUserPassword);
+app.post('/authentication', db.authentication);
 
 app.listen(port, function () {
   console.log(`Express server listening on port ${port}`);
