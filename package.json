@@ -7,7 +7,7 @@
     "create-db": "psql -U postgres < schema.sql",
     "seed": "npm run create-db && Node db/seeds.js",
     "start": "node app.js",
-    "start:dev": "nodemon app.js -watch",
+    "dev": "nodemon app.js -watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
